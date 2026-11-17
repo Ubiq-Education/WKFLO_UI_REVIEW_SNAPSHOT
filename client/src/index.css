@@ -1,0 +1,251 @@
+@import "tailwindcss";
+@import "./../../shared/styles/chat-components.css";
+@config "./../../tailwind.config.ts";
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 20 14.3% 4.1%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --primary: 24 95% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 60 4.8% 95.9%;
+  --secondary-foreground: 24 9.8% 10%;
+  --accent: 24 95% 50%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 24 95% 50%;
+  --radius: 0.5rem;
+  --tw-leading: 1.5;
+  }
+  
+  .dark {
+      --background: 240 10% 3.9%;
+      --foreground: 0 0% 98%;
+      --muted: 240 3.7% 15.9%;
+      --muted-foreground: 240 5% 64.9%;
+      --popover: 240 10% 3.9%;
+      --popover-foreground: 0 0% 98%;
+      --card: 240 10% 3.9%;
+      --card-foreground: 0 0% 98%;
+      --border: 240 3.7% 15.9%;
+      --input: 240 3.7% 15.9%;
+      --primary: 24 95% 50%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 240 3.7% 15.9%;
+      --secondary-foreground: 0 0% 98%;
+      --accent: 24 95% 50%;
+      --accent-foreground: 0 0% 100%;
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 0 0% 98%;
+      --ring: 24 95% 50%;
+      --radius: 0.5rem;
+      --tw-leading: 1.5;
+  }
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Message Bubble HTML Content Styles */
+.test-message-content {
+  max-width: 40rem;
+  
+  /* Typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold mb-2 mt-3 first:mt-0;
+  }
+  
+  h1 { @apply text-xl; }
+  h2 { @apply text-lg; }
+  h3 { @apply text-base font-semibold; }
+  h4, h5, h6 { @apply text-sm font-semibold; }
+  
+  /* Paragraph spacing */
+  p {
+    @apply mb-2 last:mb-0;
+  }
+  
+  /* Links */
+  a {
+    @apply text-blue-600 hover:text-blue-800 underline;
+  }
+  
+  /* Dark mode link colors */
+  .dark & a {
+    @apply text-blue-400 hover:text-blue-300;
+  }
+  
+  /* Emphasis */
+  strong, b {
+    @apply font-bold;
+  }
+  
+  em, i {
+    @apply italic;
+  }
+  
+  u {
+    @apply underline;
+  }
+  
+  s {
+    @apply line-through;
+  }
+  
+  /* Code */
+  code {
+    @apply bg-gray-100 px-1 py-0.5 rounded text-sm font-mono;
+  }
+  
+  .dark & code {
+    @apply bg-gray-700 text-gray-200;
+  }
+  
+  /* Same as .bubble-content pre (shared/styles/chat-components.css): wrap long tool output. */
+  pre {
+    @apply bg-gray-100 p-3 rounded border overflow-x-auto mb-3 text-sm font-mono max-w-full whitespace-pre-wrap wrap-anywhere;
+  }
+  
+  .dark & pre {
+    @apply bg-gray-800 border-gray-600 text-gray-200;
+  }
+  
+  pre code {
+    @apply bg-transparent p-0 rounded-none;
+  }
+  
+  /* Lists */
+  ul, ol {
+    @apply mb-3 pl-5 space-y-1;
+  }
+  
+  ul {
+    @apply list-disc;
+  }
+  
+  ol {
+    @apply list-decimal;
+  }
+  
+  li {
+    @apply mb-1;
+  }
+  
+  /* Nested lists */
+  li ul, li ol {
+    @apply mb-1 mt-1;
+  }
+  
+  /* Blockquotes */
+  blockquote {
+    @apply border-l-4 border-gray-300 pl-4 py-2 mb-3 italic bg-gray-50;
+  }
+  
+  .dark & blockquote {
+    @apply border-gray-600 bg-gray-800;
+  }
+  
+  /* Tables */
+  table {
+    @apply w-full border-collapse mb-3 text-sm;
+  }
+  
+  th, td {
+    @apply border border-gray-300 px-2 py-1 text-left;
+  }
+  
+  .dark & th,
+  .dark & td {
+    @apply border-gray-600;
+  }
+  
+  th {
+    @apply bg-gray-100 font-semibold;
+  }
+  
+  .dark & th {
+    @apply bg-gray-700;
+  }
+  
+  /* Horizontal rules */
+  hr {
+    @apply border-t border-gray-300 my-4;
+  }
+  
+  .dark & hr {
+    @apply border-gray-600;
+  }
+  
+  /* Small text */
+  small {
+    @apply text-xs;
+  }
+  
+  /* Mark/highlight */
+  mark {
+    @apply bg-yellow-200 px-1;
+  }
+  
+  .dark & mark {
+    @apply bg-yellow-600 text-black;
+  }
+  
+  /* Sub and superscript */
+  sub, sup {
+    @apply text-xs;
+  }
+  
+  sub {
+    @apply align-sub;
+  }
+  
+  sup {
+    @apply align-super;
+  }
+  
+  /* Form elements (if any) */
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    @apply border border-gray-300 rounded px-2 py-1 text-sm;
+  }
+  
+  .dark & input[type="text"],
+  .dark & input[type="email"],
+  .dark & textarea {
+    @apply border-gray-600 bg-gray-700 text-white;
+  }
+  
+  /* Definition lists */
+  dl {
+    @apply mb-3;
+  }
+  
+  dt {
+    @apply font-semibold mt-2 first:mt-0;
+  }
+  
+  dd {
+    @apply ml-4 mb-1;
+  }
+  
+  /* Address */
+  address {
+    @apply italic not-italic;
+  }
+}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E2E widget host page</title>
+    <!--
+      E2E-only stand-in for a customer's page that embeds the chat widget. The page object
+      (e2e/pages/chat-widget/widget-host.page.ts) serves it with page.route(), fills the
+      placeholder below and lets Vite's dev server serve the real chat-widget/src/widget.tsx.
+      Nothing here is part of a build.
+    -->
+    <!-- The React Fast Refresh preamble Vite normally injects into index.html (needed by .tsx modules). -->
+    <script type="module">
+      import RefreshRuntime from "/@react-refresh";
+      RefreshRuntime.injectIntoGlobalHook(window);
+      window.$RefreshReg$ = () => {};
+      window.$RefreshSig$ = () => (type) => type;
+      window.__vite_plugin_react_preamble_installed__ = true;
+    </script>
+  </head>
+  <body>
+    <main>
+      <h1>E2E host page</h1>
+      <p>Content of the page that embeds the chat widget.</p>
+      <div id="widget-target"></div>
+    </main>
+    <!--E2E_WIDGET_SCRIPT-->
+  </body>
+</html>

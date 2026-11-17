@@ -1,0 +1,13 @@
+{
+  "errorCodes": {
+    "WKFLO0001": "Ocurrió un error inesperado. Por favor, inténtelo de nuevo más tarde.",
+    "WKFLOMD0305": "No se encontró una versión publicada para este agente de inquilino. Por favor, publique el agente antes de compartirlo.",
+    "WKFLOMD0306": "El agente publicado está desactualizado. Por favor, vuelva a publicar el agente antes de compartirlo.",
+    "WKFLOMD0404": "No se encontró una versión publicada para esta herramienta de inquilino. Por favor, publique la herramienta antes de compartirla.",
+    "WKFLOMD0405": "La herramienta publicada está desactualizada. Por favor, vuelva a publicar la herramienta antes de compartirla.",
+    "WKFLOMD1601": "No tiene permiso para hacer esto. Por favor, contacte con Soporte.",
+    "WKFLOMD1602": "No puede eliminar su propio acceso de superusuario avanzado.",
+    "WKFLOMD1603": "Debe quedar al menos un superusuario avanzado. Por favor, contacte con Soporte.",
+    "WKFLOMD1604": "No se pudo encontrar ese espacio de trabajo. Por favor, contacte con Soporte."
+  }
+}

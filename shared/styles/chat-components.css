@@ -1,0 +1,1455 @@
+/* Shared chat component styles for wkflo */
+@import "tailwindcss";
+
+/* Widget isolation container */
+.wkflo-widget-root {
+  /* Reset all inherited styles */
+  all: initial;
+  
+  /* Set font stack */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  
+  /* Include necessary base styles */
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  
+  /* Ensure box-sizing is border-box for all children */
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* Message Bubble HTML Content Styles */
+.bubble-content {
+  /* Typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold mb-2 mt-3 first:mt-0;
+  }
+  
+  h1 { @apply text-xl; }
+  h2 { @apply text-lg; }
+  h3 { @apply text-base font-semibold; }
+  h4, h5, h6 { @apply text-sm font-semibold; }
+  
+  /* Paragraph spacing */
+  p {
+    @apply mb-2 last:mb-0;
+  }
+  
+  /* Links */
+  a {
+    @apply text-blue-600 hover:text-blue-800 underline;
+  }
+  
+  /* Dark mode link colors */
+  .dark & a {
+    @apply text-blue-400 hover:text-blue-300;
+  }
+  
+  /* Emphasis */
+  strong, b {
+    @apply font-bold;
+  }
+  
+  em, i {
+    @apply italic;
+  }
+  
+  u {
+    @apply underline;
+  }
+  
+  s {
+    @apply line-through;
+  }
+  
+  /* Code */
+  code {
+    @apply bg-gray-100 px-1 py-0.5 rounded text-sm font-mono;
+  }
+  
+  .dark & code {
+    @apply bg-gray-700 text-gray-200;
+  }
+  
+  /* max-w-full + pre-wrap + wrap-anywhere: a long JSON/tool-output block wraps inside the
+     bubble instead of setting its minimum width and stretching it past the chat panel. */
+  pre {
+    @apply bg-gray-100 p-3 rounded border overflow-x-auto mb-3 text-sm font-mono max-w-full whitespace-pre-wrap wrap-anywhere;
+  }
+  
+  .dark & pre {
+    @apply bg-gray-800 border-gray-600 text-gray-200;
+  }
+  
+  pre code {
+    @apply bg-transparent p-0 rounded-none;
+  }
+  
+  /* Lists */
+  ul, ol {
+    @apply mb-3 pl-5 space-y-1;
+  }
+  
+  ul {
+    @apply list-disc;
+  }
+  
+  ol {
+    @apply list-decimal;
+  }
+  
+  li {
+    @apply mb-1;
+  }
+  
+  /* Nested lists */
+  li ul, li ol {
+    @apply mb-1 mt-1;
+  }
+  
+  /* Blockquotes */
+  blockquote {
+    @apply border-l-4 border-gray-300 pl-4 py-2 mb-3 italic bg-gray-50;
+  }
+  
+  .dark & blockquote {
+    @apply border-gray-600 bg-gray-800;
+  }
+  
+  /* Images — no rule existed at all before, so a raw un-swapped <img> (one DOMPurify left
+     alone because it wasn't matched/replaced with a DownloadableImage) had no max-width and
+     could force the message bubble/scroll container wider than the chat UI (Task 7087). */
+  img {
+    @apply max-w-full h-auto;
+  }
+
+  /* Tables */
+  table {
+    /* display: block + overflow-x: auto scopes horizontal scrolling to the table itself
+       (matching the `pre` rule above) instead of letting an oversized table force the whole
+       messages container to scroll horizontally (Task 7087). */
+    @apply block w-full border-collapse mb-3 text-sm max-w-full overflow-x-auto;
+  }
+  
+  th, td {
+    @apply border border-gray-300 px-2 py-1 text-left;
+  }
+  
+  .dark & th,
+  .dark & td {
+    @apply border-gray-600;
+  }
+  
+  th {
+    @apply bg-gray-100 font-semibold;
+  }
+  
+  .dark & th {
+    @apply bg-gray-700;
+  }
+  
+  /* Horizontal rules */
+  hr {
+    @apply border-t border-gray-300 my-4;
+  }
+  
+  .dark & hr {
+    @apply border-gray-600;
+  }
+  
+  /* Small text */
+  small {
+    @apply text-xs;
+  }
+  
+  /* Mark/highlight */
+  mark {
+    @apply bg-yellow-200 px-1;
+  }
+  
+  .dark & mark {
+    @apply bg-yellow-600 text-black;
+  }
+  
+  /* Sub and superscript */
+  sub, sup {
+    @apply text-xs;
+  }
+  
+  sub {
+    @apply align-sub;
+  }
+  
+  sup {
+    @apply align-super;
+  }
+  
+  /* Form elements (if any) */
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    @apply border border-gray-300 rounded px-2 py-1 text-sm;
+  }
+  
+  .dark & input[type="text"],
+  .dark & input[type="email"],
+  .dark & textarea {
+    @apply border-gray-600 bg-gray-700 text-white;
+  }
+  
+  /* Definition lists */
+  dl {
+    @apply mb-3;
+  }
+  
+  dt {
+    @apply font-semibold mt-2 first:mt-0;
+  }
+  
+  dd {
+    @apply ml-4 mb-1;
+  }
+  
+  /* Address */
+  address {
+    @apply italic not-italic;
+  }
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
+}
+
+@layer components {
+  /* Default styles without wrapper (for regular app usage) */
+  /* wrap-anywhere (not break-word): only `anywhere` lowers the min-content width, so a long
+     unbroken string (tool-call JSON, URLs, IDs) wraps instead of widening the bubble. */
+  .wkflo-chat-bubble {
+    @apply inline-block px-4 py-2 max-w-xs wrap-anywhere min-w-0;
+  }
+
+  .wkflo-chat-bubble-size {
+    max-width: 90% !important;
+    min-width: 0;
+  }
+
+  .wkflo-chat-bubble .bubble-content {
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  
+  .wkflo-chat-bubble--user {
+    @apply text-white ml-auto;
+  }
+  
+  .wkflo-chat-bubble--agent {
+    @apply bg-gray-100 text-gray-900;
+  }
+  
+  .wkflo-chat-bubble--thinking {
+    @apply bg-gray-50 border border-gray-300;
+    position: relative;
+    animation: thinking-pulse 2s ease-in-out infinite;
+  }
+  
+  .wkflo-chat-bubble--thinking::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #e5e7eb, #f3f4f6, #e5e7eb);
+    border-radius: inherit;
+    z-index: -1;
+    animation: thinking-border 3s ease-in-out infinite;
+  }
+  
+  @keyframes thinking-pulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+  }
+  
+  @keyframes thinking-border {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+  }
+  
+  .wkflo-chat-bubble--tool {
+    @apply bg-blue-50 text-blue-900 border border-blue-200;
+  }
+
+  .wkflo-chat-footer {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: #9ca3af;
+    text-align: center;
+    padding: 0 1rem 0.5rem;
+    margin-top: -0.75rem;
+  }
+
+  .wkflo-chat-bubble--pill {
+    /* Fixed radius instead of rounded-full: a relative radius balloons into
+       an oval on multi-line messages instead of staying pill-shaped. */
+    border-radius: 1.25rem;
+  }
+
+  .wkflo-chat-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md;
+  }
+  
+  .wkflo-chat-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  }
+  
+  .wkflo-chat-button {
+    @apply px-4 py-2 rounded-md font-medium transition-colors;
+  }
+  
+  .wkflo-chat-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 0 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .wkflo-chat-button:hover:not(:disabled) {
+    filter: brightness(110%);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .wkflo-chat-message-enhanced {
+    @apply px-4 py-3 rounded-lg shadow-sm border border-gray-200;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .wkflo-chat-message-enhanced:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .wkflo-header-button {
+    @apply text-white p-1 rounded transition-all duration-200;
+  }
+  
+  .wkflo-header-button:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  
+  .wkflo-shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .wkflo-shadow-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .wkflo-widget-minimized {
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    /* No overflow: hidden here (deliberately, unlike .wkflo-widget-launcher-icon below) —
+       the "expandable" indicator dot rendered inside this button (agent-chat-interface.tsx)
+       sits near its edge and would get clipped by this box's own overflow boundary. The
+       circle-launcher icon crop instead happens on an inner wrapper scoped to just the icon,
+       added in agent-chat-interface.tsx, so the dot is never a descendant of that clip. */
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 64px;
+    height: 64px;
+  }
+
+  .wkflo-widget-minimized:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .wkflo-widget-minimized--pill {
+    width: auto;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px 0 6px;
+  }
+
+  .wkflo-widget-launcher-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .wkflo-widget-launcher-text {
+    color: white;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    white-space: nowrap;
+    margin-left: 12px;
+  }
+
+  .wkflo-chat-container {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  /* Isolated styles with wrapper (for widget usage) */
+  .wkflo-widget-root .wkflo-chat-bubble {
+    display: inline-block;
+    padding: 1rem 1rem;
+    max-width: 75%;
+    min-width: 0;
+    /* See the unscoped .wkflo-chat-bubble rule: `anywhere` lets long unbroken strings wrap. */
+    overflow-wrap: anywhere;
+  }
+  
+  .wkflo-widget-root .wkflo-chat-bubble--user {
+    color: white;
+    margin-left: auto;
+  }
+  
+  .wkflo-widget-root .wkflo-chat-bubble--agent {
+    background-color: #f3f4f6;
+    color: #111827;
+  }
+  
+  .wkflo-widget-root .wkflo-chat-bubble--thinking {
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    position: relative;
+    animation: thinking-pulse 2s ease-in-out infinite;
+  }
+
+  .wkflo-widget-root .wkflo-chat-footer {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: #9ca3af;
+    text-align: center;
+    padding: 0 1rem 0.5rem;
+    margin-top: -0.75rem;
+  }
+
+  .wkflo-widget-root .wkflo-chat-bubble--pill {
+    border-radius: 1.25rem;
+  }
+
+  .wkflo-widget-root .wkflo-chat-bubble--thinking::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #e5e7eb, #f3f4f6, #e5e7eb);
+    border-radius: inherit;
+    z-index: -1;
+    animation: thinking-border 3s ease-in-out infinite;
+  }
+  
+  .wkflo-widget-root .wkflo-chat-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+  }
+  
+  .wkflo-widget-root .wkflo-chat-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  }
+  
+  .wkflo-widget-root .wkflo-chat-button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.15s ease-in-out;
+  }
+  
+  .wkflo-widget-root .wkflo-chat-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 0 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .wkflo-widget-root .wkflo-chat-button:hover:not(:disabled) {
+    filter: brightness(110%);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .wkflo-widget-root .wkflo-chat-message-enhanced {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .wkflo-widget-root .wkflo-chat-message-enhanced:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .wkflo-widget-root .wkflo-header-button {
+    color: white;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s;
+  }
+  
+  .wkflo-widget-root .wkflo-header-button:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  
+  .wkflo-widget-root .wkflo-shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .wkflo-widget-root .wkflo-shadow-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .wkflo-widget-root .wkflo-widget-minimized {
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    /* No overflow: hidden here — see the unscoped .wkflo-widget-minimized rule above for why
+       (the "expandable" indicator dot rendered inside this button would get clipped). */
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 64px;
+    height: 64px;
+  }
+
+  .wkflo-widget-root .wkflo-widget-minimized:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .wkflo-widget-root .wkflo-widget-minimized--pill {
+    width: auto;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px 0 6px;
+  }
+
+  .wkflo-widget-root .wkflo-widget-launcher-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .wkflo-widget-root .wkflo-widget-launcher-text {
+    color: white;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    white-space: nowrap;
+    margin-left: 12px;
+  }
+
+  .wkflo-widget-root .wkflo-chat-container {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  /* Contact form card */
+  .wkflo-contact-form-card {
+    position: relative;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    width: 26rem;
+    max-width: 100%;
+  }
+
+  .wkflo-contact-form-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s;
+  }
+
+  .wkflo-contact-form-close:hover {
+    color: #111827;
+  }
+
+  .wkflo-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .wkflo-contact-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .wkflo-contact-form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  .wkflo-contact-form-label span {
+    color: #374151;
+    margin-left: 0.125rem;
+  }
+
+  .wkflo-contact-form-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: white;
+    font-size: 0.875rem;
+    color: #111827;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .wkflo-contact-form-input:focus {
+    border-color: #6b7280;
+    box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.15);
+  }
+
+  .wkflo-contact-form-submit {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: filter 0.15s;
+    margin-top: 0.25rem;
+  }
+
+  .wkflo-contact-form-submit:hover {
+    filter: brightness(90%);
+  }
+
+  .wkflo-contact-form-success {
+    font-size: 0.875rem;
+    color: #374151;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  .wkflo-widget-root .wkflo-contact-form-card {
+    position: relative;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    width: 26rem;
+    max-width: 100%;
+  }
+
+  .wkflo-widget-root .wkflo-contact-form-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wkflo-widget-root .wkflo-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .wkflo-widget-root .wkflo-contact-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .wkflo-widget-root .wkflo-contact-form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  .wkflo-widget-root .wkflo-contact-form-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: white;
+    font-size: 0.875rem;
+    color: #111827;
+    outline: none;
+  }
+
+  .wkflo-widget-root .wkflo-contact-form-submit {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 0.25rem;
+  }
+
+  .wkflo-widget-root .wkflo-contact-form-success {
+    font-size: 0.875rem;
+    color: #374151;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  /* Text suggestion card */
+  .wkflo-text-suggestion-card {
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    width: 26rem;
+    max-width: 100%;
+  }
+
+  .wkflo-text-suggestion-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  .wkflo-text-suggestion-text {
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    color: #111827;
+    overflow-wrap: break-word;
+    margin-bottom: 0.75rem;
+  }
+
+  /* white-space: pre-wrap preserves the plain-text case's newlines/whitespace, but must not
+     also apply when suggestedText rendered as HTML (.bubble-content) — otherwise rendered
+     block elements (p, div, etc.) get forced whitespace preservation on top of their own
+     layout (Task 7087). */
+  .wkflo-text-suggestion-text:not(.bubble-content) {
+    white-space: pre-wrap;
+  }
+
+  .wkflo-text-suggestion-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .wkflo-text-suggestion-btn {
+    padding: 6px 12px;
+    border: 1px solid rgb(185, 207, 251);
+    border-radius: 16px;
+    background-color: rgb(234, 241, 255);
+    color: rgb(30, 79, 191);
+    font: 600 12px sans-serif;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+  }
+
+  .wkflo-text-suggestion-btn:hover:not(:disabled) {
+    background-color: rgb(221, 232, 255);
+    border-color: rgb(160, 187, 245);
+  }
+
+  .wkflo-text-suggestion-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .wkflo-text-suggestion-btn--danger {
+    border: 1px solid rgb(231, 201, 201);
+    background-color: rgb(253, 242, 242);
+    color: rgb(178, 58, 58);
+  }
+
+  .wkflo-text-suggestion-btn--danger:hover:not(:disabled) {
+    background-color: rgb(250, 227, 227);
+    border-color: rgb(219, 180, 180);
+  }
+
+  .wkflo-text-suggestion-caption {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+  }
+
+  .wkflo-text-suggestion-caption--warning {
+    color: rgb(180, 83, 9);
+  }
+
+  .wkflo-widget-root .wkflo-text-suggestion-card {
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    width: 26rem;
+    max-width: 100%;
+  }
+
+  .wkflo-widget-root .wkflo-text-suggestion-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  .wkflo-widget-root .wkflo-text-suggestion-text {
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    color: #111827;
+    overflow-wrap: break-word;
+    margin-bottom: 0.75rem;
+  }
+
+  /* See the unscoped .wkflo-text-suggestion-text rule above — same reasoning, scoped copy. */
+  .wkflo-widget-root .wkflo-text-suggestion-text:not(.bubble-content) {
+    white-space: pre-wrap;
+  }
+
+  .wkflo-widget-root .wkflo-text-suggestion-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .wkflo-widget-root .wkflo-text-suggestion-btn {
+    padding: 6px 12px;
+    border: 1px solid rgb(185, 207, 251);
+    border-radius: 16px;
+    background-color: rgb(234, 241, 255);
+    color: rgb(30, 79, 191);
+    font: 600 12px sans-serif;
+    cursor: pointer;
+  }
+
+  .wkflo-widget-root .wkflo-text-suggestion-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .wkflo-widget-root .wkflo-text-suggestion-btn--danger {
+    border: 1px solid rgb(231, 201, 201);
+    background-color: rgb(253, 242, 242);
+    color: rgb(178, 58, 58);
+  }
+
+  .wkflo-widget-root .wkflo-text-suggestion-caption {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+  }
+
+  .wkflo-widget-root .wkflo-text-suggestion-caption--warning {
+    color: rgb(180, 83, 9);
+  }
+
+  /* MCP OAuth reconnect card (Task 7130 Addendum 2) */
+  .wkflo-mcp-oauth-reconnect-card {
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    width: 26rem;
+    max-width: 100%;
+  }
+
+  .wkflo-mcp-oauth-reconnect-message {
+    font-size: 0.875rem;
+    color: #374151;
+    margin-bottom: 0.75rem;
+    overflow-wrap: break-word;
+  }
+
+  .wkflo-mcp-oauth-reconnect-btn {
+    padding: 6px 12px;
+    border: 1px solid rgb(185, 207, 251);
+    border-radius: 16px;
+    background-color: rgb(234, 241, 255);
+    color: rgb(30, 79, 191);
+    font: 600 12px sans-serif;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+  }
+
+  .wkflo-mcp-oauth-reconnect-btn:hover:not(:disabled) {
+    background-color: rgb(221, 232, 255);
+    border-color: rgb(160, 187, 245);
+  }
+
+  .wkflo-mcp-oauth-reconnect-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .wkflo-mcp-oauth-reconnect-error {
+    font-size: 0.75rem;
+    color: rgb(178, 58, 58);
+    margin-top: 0.5rem;
+  }
+
+  .wkflo-widget-root .wkflo-mcp-oauth-reconnect-card {
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    width: 26rem;
+    max-width: 100%;
+  }
+
+  .wkflo-widget-root .wkflo-mcp-oauth-reconnect-message {
+    font-size: 0.875rem;
+    color: #374151;
+    margin-bottom: 0.75rem;
+    overflow-wrap: break-word;
+  }
+
+  .wkflo-widget-root .wkflo-mcp-oauth-reconnect-btn {
+    padding: 6px 12px;
+    border: 1px solid rgb(185, 207, 251);
+    border-radius: 16px;
+    background-color: rgb(234, 241, 255);
+    color: rgb(30, 79, 191);
+    font: 600 12px sans-serif;
+    cursor: pointer;
+  }
+
+  .wkflo-widget-root .wkflo-mcp-oauth-reconnect-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .wkflo-widget-root .wkflo-mcp-oauth-reconnect-error {
+    font-size: 0.75rem;
+    color: rgb(178, 58, 58);
+    margin-top: 0.5rem;
+  }
+
+  /* Tool approval card ("Ask for permission", US 7575). Each rule is declared both unscoped
+     (main app, Shadow DOM widget) and under .wkflo-widget-root (CSS-prefix widget isolation,
+     where the extra specificity keeps host-page button/pre styles out) - see
+     docs/CSS_ISOLATION_SOLUTIONS.md. */
+  .wkflo-tool-approval-card,
+  .wkflo-widget-root .wkflo-tool-approval-card {
+    position: relative;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 0.875rem 1rem;
+    margin-top: 0.5rem;
+    width: 26rem;
+    max-width: 100%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    font-family: inherit;
+    /* Base size for anything that inherits (e.g. buttons under a host "font-size: inherit"). */
+    font-size: 12px;
+    line-height: 1.4;
+    color: #111827;
+    text-align: left;
+  }
+
+  .wkflo-tool-approval-card--pending,
+  .wkflo-widget-root .wkflo-tool-approval-card--pending {
+    border-color: rgb(245, 208, 140);
+  }
+
+  .wkflo-tool-approval-header,
+  .wkflo-widget-root .wkflo-tool-approval-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .wkflo-tool-approval-icon,
+  .wkflo-widget-root .wkflo-tool-approval-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+    color: rgb(180, 83, 9);
+  }
+
+  .wkflo-tool-approval-title,
+  .wkflo-widget-root .wkflo-tool-approval-title {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: #111827;
+    overflow-wrap: anywhere;
+  }
+
+  .wkflo-tool-approval-title strong,
+  .wkflo-widget-root .wkflo-tool-approval-title strong {
+    font-weight: 600;
+  }
+
+  .wkflo-tool-approval-description,
+  .wkflo-widget-root .wkflo-tool-approval-description {
+    margin: 0.375rem 0 0 1.625rem;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: #6b7280;
+    overflow-wrap: anywhere;
+  }
+
+  .wkflo-tool-approval-details-toggle,
+  .wkflo-widget-root .wkflo-tool-approval-details-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0.5rem 0 0 1.375rem;
+    padding: 0.125rem 0.25rem;
+    border: none;
+    border-radius: 0.25rem;
+    background: transparent;
+    color: #4b5563;
+    /* Same 12px as the chat's meta text (agent name, text-xs) and the other cards' buttons.
+       !important on size/line-height: in CSS-prefix widget mode a host page's unlayered
+       button rule (e.g. Bootstrap's "font-size: inherit") would otherwise beat this layered
+       rule and blow the text up to the surrounding font size. */
+    font-family: inherit;
+    font-size: 12px !important;
+    font-weight: 500;
+    line-height: 16px !important;
+    letter-spacing: normal;
+    height: auto;
+    min-height: 0;
+    text-transform: none;
+    cursor: pointer;
+  }
+
+  .wkflo-tool-approval-details-toggle:hover,
+  .wkflo-widget-root .wkflo-tool-approval-details-toggle:hover {
+    background-color: #f3f4f6;
+  }
+
+  .wkflo-tool-approval-chevron,
+  .wkflo-widget-root .wkflo-tool-approval-chevron {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .wkflo-tool-approval-details,
+  .wkflo-widget-root .wkflo-tool-approval-details {
+    margin: 0.375rem 0 0 1.625rem;
+  }
+
+  .wkflo-tool-approval-arguments,
+  .wkflo-widget-root .wkflo-tool-approval-arguments {
+    margin: 0;
+    max-height: 12rem;
+    overflow: auto;
+    padding: 0.5rem 0.625rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    background-color: #f9fafb;
+    color: #1f2937;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .wkflo-tool-approval-no-arguments,
+  .wkflo-widget-root .wkflo-tool-approval-no-arguments {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  .wkflo-tool-approval-actions,
+  .wkflo-widget-root .wkflo-tool-approval-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .wkflo-tool-approval-btn,
+  .wkflo-widget-root .wkflo-tool-approval-btn {
+    margin: 0;
+    padding: 6px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 16px;
+    background-color: #ffffff;
+    color: #1f2937;
+    /* Matches the MCP OAuth reconnect / text-suggestion card buttons (600 12px, 6px 12px
+       padding, ~28px tall). See the Details toggle above for why size is !important. */
+    font-family: inherit;
+    font-size: 12px !important;
+    font-weight: 600;
+    line-height: 16px !important;
+    letter-spacing: normal;
+    height: auto;
+    min-height: 0;
+    text-transform: none;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, opacity 0.15s;
+  }
+
+  .wkflo-tool-approval-btn:hover:not(:disabled),
+  .wkflo-widget-root .wkflo-tool-approval-btn:hover:not(:disabled) {
+    background-color: #f3f4f6;
+  }
+
+  .wkflo-tool-approval-btn--primary,
+  .wkflo-widget-root .wkflo-tool-approval-btn--primary {
+    border-color: rgb(30, 79, 191);
+    background-color: rgb(30, 79, 191);
+    color: #ffffff;
+  }
+
+  .wkflo-tool-approval-btn--primary:hover:not(:disabled),
+  .wkflo-widget-root .wkflo-tool-approval-btn--primary:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  .wkflo-tool-approval-btn--danger,
+  .wkflo-widget-root .wkflo-tool-approval-btn--danger {
+    border-color: rgb(231, 201, 201);
+    background-color: rgb(253, 242, 242);
+    color: rgb(178, 58, 58);
+  }
+
+  .wkflo-tool-approval-btn--danger:hover:not(:disabled),
+  .wkflo-widget-root .wkflo-tool-approval-btn--danger:hover:not(:disabled) {
+    background-color: rgb(250, 227, 227);
+  }
+
+  .wkflo-tool-approval-btn:disabled,
+  .wkflo-widget-root .wkflo-tool-approval-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .wkflo-tool-approval-caption,
+  .wkflo-widget-root .wkflo-tool-approval-caption {
+    margin: 0.5rem 0 0;
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  .wkflo-tool-approval-outcome,
+  .wkflo-widget-root .wkflo-tool-approval-outcome {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0.625rem 0 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4b5563;
+  }
+
+  .wkflo-tool-approval-card--approved .wkflo-tool-approval-outcome,
+  .wkflo-widget-root .wkflo-tool-approval-card--approved .wkflo-tool-approval-outcome {
+    color: rgb(21, 128, 61);
+  }
+
+  .wkflo-tool-approval-card--denied .wkflo-tool-approval-outcome,
+  .wkflo-widget-root .wkflo-tool-approval-card--denied .wkflo-tool-approval-outcome {
+    color: rgb(178, 58, 58);
+  }
+
+  .wkflo-tool-approval-outcome-icon,
+  .wkflo-widget-root .wkflo-tool-approval-outcome-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  /* Visually hidden, still read by screen readers. */
+  .wkflo-tool-approval-sr-only,
+  .wkflo-widget-root .wkflo-tool-approval-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .wkflo-tool-approval-error,
+  .wkflo-widget-root .wkflo-tool-approval-error {
+    margin: 0.5rem 0 0;
+    font-size: 0.75rem;
+    color: rgb(178, 58, 58);
+  }
+
+  /* US 7503 (MAISY design, mPulse): the pulsing brand-green ring on the Chat UI's Select feature
+     icon while selection mode is on. Off for users who ask for reduced motion. */
+  @keyframes wkflo-feature-pick-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 160, 133, 0.45); }
+    100% { box-shadow: 0 0 0 8px rgba(0, 160, 133, 0); }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .wkflo-feature-pick-pulse {
+      animation: wkflo-feature-pick-pulse 1.4s ease-out infinite;
+    }
+  }
+
+  /* US 7550 (MAISY design, mDot): the blinking amber dot of the MAISY top bar while connecting or
+     reconnecting. Off for users who ask for reduced motion. */
+  @keyframes wkflo-connection-dot-pulse {
+    0%, 80%, 100% { opacity: 0.25; }
+    40% { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .wkflo-connection-dot-pulse {
+      animation: wkflo-connection-dot-pulse 1.2s infinite;
+    }
+  }
+
+  /* US 7507 (MAISY design): a conversations-list row - transparent, tinted on hover and for the
+     conversation open last (the design's sand-50). */
+  .wkflo-conversation-row {
+    background-color: transparent;
+    transition: background-color 0.12s;
+  }
+
+  .wkflo-conversation-row:hover,
+  .wkflo-conversation-row--active {
+    background-color: #faf9f7;
+  }
+
+  .wkflo-conversation-row:focus-visible {
+    outline: 2px solid #1f2523;
+    outline-offset: -2px;
+  }
+
+  /* US 7506 (MAISY design): switching between a conversation and the conversations list - the list
+     slides in from the left, a conversation from the right. Off for users who ask for reduced
+     motion. */
+  @keyframes wkflo-maisy-slide-in-from-left {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+
+  @keyframes wkflo-maisy-slide-in-from-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .wkflo-maisy-view-enter-from-left {
+      animation: wkflo-maisy-slide-in-from-left 0.22s ease-out;
+    }
+
+    .wkflo-maisy-view-enter-from-right {
+      animation: wkflo-maisy-slide-in-from-right 0.22s ease-out;
+    }
+  }
+
+  /* US 7505: the MAISY header's New chat pill - no fill of its own, a light tint on hover. */
+  .wkflo-maisy-new-chat {
+    background-color: transparent;
+    transition: background-color 0.12s;
+  }
+
+  .wkflo-maisy-new-chat:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.35);
+  }
+}
+
+@layer utilities {
+  /* Custom height utilities for chat widgets */
+  .w-320 { width: 20rem; /* 320px */ }
+  .w-450 { width: 28.125rem; /* 450px */ }
+  
+  .h-100 { height: 25rem; /* 400px */ }
+  .h-104 { height: 26rem; /* 416px */ }
+  .h-108 { height: 27rem; /* 432px */ }
+  .h-112 { height: 28rem; /* 448px */ }
+  .h-116 { height: 29rem; /* 464px */ }
+  .h-120 { height: 30rem; /* 480px */ }
+  .h-124 { height: 31rem; /* 496px */ }
+  .h-128 { height: 32rem; /* 512px */ }
+  .h-132 { height: 33rem; /* 528px */ }
+  .h-136 { height: 34rem; /* 544px */ }
+  .h-140 { height: 35rem; /* 560px */ }
+  .h-144 { height: 36rem; /* 576px */ }
+  
+  /* Specific chat widget heights */
+  .h-chat-sm { height: 24rem; /* 384px - small chat */ }
+  .h-chat-md { height: 31.25rem; /* 500px - medium chat */ }
+  .h-chat-lg { height: 37.5rem; /* 600px - large chat */ }
+  .h-chat-xl { height: 43rem; /* 700px - extra large chat */ }
+
+  /* Widget isolation utilities */
+  .wkflo-widget-root .h-100 { height: 25rem; }
+  .wkflo-widget-root .h-104 { height: 26rem; }
+  .wkflo-widget-root .h-108 { height: 27rem; }
+  .wkflo-widget-root .h-112 { height: 28rem; }
+  .wkflo-widget-root .h-116 { height: 29rem; }
+  .wkflo-widget-root .h-120 { height: 30rem; }
+  .wkflo-widget-root .h-124 { height: 31rem; }
+  .wkflo-widget-root .h-128 { height: 32rem; }
+  .wkflo-widget-root .h-132 { height: 33rem; }
+  .wkflo-widget-root .h-136 { height: 34rem; }
+  .wkflo-widget-root .h-140 { height: 35rem; }
+  .wkflo-widget-root .h-144 { height: 36rem; }
+  
+  .wkflo-widget-root .h-chat-sm { height: 24rem; }
+  .wkflo-widget-root .h-chat-md { height: 31.25rem; }
+  .wkflo-widget-root .h-chat-lg { height: 37.5rem; }
+  .wkflo-widget-root .h-chat-xl { height: 43.75rem; }
+  
+  /* Common Tailwind utilities scoped to widget */
+  .wkflo-widget-root .flex { display: flex; }
+  .wkflo-widget-root .flex-col { flex-direction: column; }
+  .wkflo-widget-root .items-center { align-items: center; }
+  .wkflo-widget-root .justify-between { justify-content: space-between; }
+  .wkflo-widget-root .justify-center { justify-content: center; }
+  .wkflo-widget-root .justify-end { justify-content: flex-end; }
+  .wkflo-widget-root .justify-start { justify-content: flex-start; }
+  /* .wkflo-widget-root .space-x-1 > * + * { margin-left: 0.25rem; }
+  .wkflo-widget-root .space-x-2 > * + * { margin-left: 0.5rem; }
+  .wkflo-widget-root .space-y-2 > * + * { margin-top: 0.5rem; }
+  .wkflo-widget-root .space-y-4 > * + * { margin-top: 1rem; } */
+  .wkflo-widget-root .p-1 { padding: 0.25rem; }
+  .wkflo-widget-root .p-2 { padding: 0.5rem; }
+  .wkflo-widget-root .p-3 { padding: 0.75rem; }
+  .wkflo-widget-root .p-4 { padding: 1rem; }
+  .wkflo-widget-root .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+  .wkflo-widget-root .px-4 { padding-left: 1rem; padding-right: 1rem; }
+  .wkflo-widget-root .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .wkflo-widget-root .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  .wkflo-widget-root .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+  .wkflo-widget-root .m-2 { margin: 0.5rem; }
+  .wkflo-widget-root .mb-2 { margin-bottom: 0.5rem; }
+  .wkflo-widget-root .mb-4 { margin-bottom: 1rem; }
+  .wkflo-widget-root .mt-2 { margin-top: 0.5rem; }
+  .wkflo-widget-root .mt-4 { margin-top: 1rem; }
+  .wkflo-widget-root .ml-auto { margin-left: auto; }
+  .wkflo-widget-root .mx-auto { margin-left: auto; margin-right: auto; }
+  .wkflo-widget-root .w-4 { width: 1rem; }
+  .wkflo-widget-root .w-7 { width: 1.75rem; }
+  .wkflo-widget-root .w-full { width: 100%; }
+  .wkflo-widget-root .w-350 { width: 20rem; }
+  .wkflo-widget-root .h-4 { height: 1rem; }
+  .wkflo-widget-root .h-7 { height: 1.75rem; }
+  .wkflo-widget-root .h-full { height: 100%; }
+  .wkflo-widget-root .max-w-xs { max-width: 20rem; }
+  .wkflo-widget-root .max-w-sm { max-width: 24rem; }
+  .wkflo-widget-root .max-w-md { max-width: 28rem; }
+  .wkflo-widget-root .flex-1 { flex: 1 1 0%; }
+  .wkflo-widget-root .text-white { color: white; }
+  .wkflo-widget-root .text-gray-900 { color: #111827; }
+  .wkflo-widget-root .text-gray-700 { color: #374151; }
+  .wkflo-widget-root .text-gray-500 { color: #6b7280; }
+  .wkflo-widget-root .text-red-700 { color: #b91c1c; }
+  .wkflo-widget-root .text-sm { font-size: 0.875rem; }
+  .wkflo-widget-root .text-xs { font-size: 0.75rem; }
+  .wkflo-widget-root .text-opacity-80 { --tw-text-opacity: 0.8; }
+  .wkflo-widget-root .font-medium { font-weight: 500; }
+  .wkflo-widget-root .underline { text-decoration: underline; }
+  .wkflo-widget-root .bg-white { background-color: white; }
+  .wkflo-widget-root .bg-gray-100 { background-color: #f3f4f6; }
+  .wkflo-widget-root .bg-gray-50 { background-color: #f9fafb; }
+  .wkflo-widget-root .bg-red-100 { background-color: #fef2f2; }
+  .wkflo-widget-root .bg-green-500 { background-color: #10b981; }
+  .wkflo-widget-root .bg-gray-400 { background-color: #9ca3af; }
+  .wkflo-widget-root .border { border: 1px solid #d1d5db; }
+  .wkflo-widget-root .border-2 { border-width: 2px; }
+  .wkflo-widget-root .border-t { border-top: 1px solid #d1d5db; }
+  .wkflo-widget-root .border-b { border-bottom: 1px solid #d1d5db; }
+  .wkflo-widget-root .border-gray-200 { border-color: #e5e7eb; }
+  .wkflo-widget-root .border-gray-300 { border-color: #d1d5db; }
+  .wkflo-widget-root .border-red-300 { border-color: #fca5a5; }
+  .wkflo-widget-root .border-white { border-color: white; }
+  .wkflo-widget-root .rounded { border-radius: 0.25rem; }
+  .wkflo-widget-root .rounded-md { border-radius: 0.375rem; }
+  .wkflo-widget-root .rounded-lg { border-radius: 0.5rem; }
+  .wkflo-widget-root .rounded-t-lg { border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem; }
+  .wkflo-widget-root .rounded-full { border-radius: 9999px; }
+  .wkflo-widget-root .rounded-none { border-radius: 0; }
+  .wkflo-widget-root .cursor-pointer { cursor: pointer; }
+  .wkflo-widget-root .select-none { user-select: none; }
+  .wkflo-widget-root .overflow-hidden { overflow: hidden; }
+  .wkflo-widget-root .overflow-y-auto { overflow-y: auto; }
+  .wkflo-widget-root .fixed { position: fixed; }
+  .wkflo-widget-root .absolute { position: absolute; }
+  .wkflo-widget-root .relative { position: relative; }
+  .wkflo-widget-root .bottom-4 { bottom: 1rem; }
+  .wkflo-widget-root .right-4 { right: 1rem; }
+  .wkflo-widget-root .left-4 { left: 1rem; }
+  .wkflo-widget-root .top-0 { top: 0; }
+  .wkflo-widget-root .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+  .wkflo-widget-root .transition-colors { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+  .wkflo-widget-root .duration-200 { transition-duration: 200ms; }
+  .wkflo-widget-root .animate-bounce { animation: bounce 1s infinite; }
+  
+  /* Custom max-width utilities */
+  .wkflo-widget-root .max-w-tool-name { max-width: 150px; }
+}
+
+/* Add utilities for non-widget usage too */
+@layer utilities {
+  .max-w-tool-name { 
+    max-width: 150px; 
+  }
+}

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
+  <!-- Background -->
+  <rect width="300" height="200" rx="8" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1.5"/>
+
+  <!-- Broken image frame -->
+  <rect x="110" y="48" width="80" height="68" rx="4" fill="none" stroke="#D1D5DB" stroke-width="2" stroke-dasharray="5,3"/>
+
+  <!-- Mountain/landscape icon (broken) -->
+  <polyline points="118,104 136,78 150,92 162,80 182,104" fill="none" stroke="#D1D5DB" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="168" cy="70" r="6" fill="none" stroke="#D1D5DB" stroke-width="2"/>
+
+  <!-- Diagonal cross (broken) -->
+  <line x1="110" y1="48" x2="190" y2="116" stroke="#FCA5A5" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="190" y1="48" x2="110" y2="116" stroke="#FCA5A5" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Clock icon -->
+  <circle cx="150" cy="130" r="10" fill="#FEF3C7" stroke="#FCD34D" stroke-width="1.5"/>
+  <line x1="150" y1="124" x2="150" y2="130" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="150" y1="130" x2="154" y2="133" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Text -->
+  <text x="150" y="158" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#6B7280" text-anchor="middle">Image no longer available</text>
+  <text x="150" y="175" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#9CA3AF" text-anchor="middle">This image has expired</text>
+</svg>

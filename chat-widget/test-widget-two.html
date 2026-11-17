@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wkflo Widget Test</title>
+    <script src="https://localhost/assets/wkflo-widget.umd.cjs" data-tenant-guid="61fe4012-23c4-4c15-8a8e-963a879eae53" data-share-id="ee7f0149-948a-430f-8ec9-710a13531149" data-api-endpoint="https://localhost:32771" data-target-element="#wkflo-widget-target" data-require-remote-config="true" data-error-url="/CHAT/Widget/error"></script>
+    <!-- <script src="https://localhost/assets/wkflo-widget.umd.cjs" data-share-id="62f36b49-159f-4213-81f3-e2edbd8931d1" data-tenant-guid="DA6FF92F-6BF1-4DFF-BE13-F73FCE8DDA8B" data-api-endpoint="https://localhost:32771" data-security-type="azure-ad" data-azure-client-id="2ac37601-364a-406f-b7a3-c20443d036c0" data-azure-tenant-id="bf3e1181-ffe9-40f7-aee4-11dc5fd642c6" data-azure-scopes="openid,profile,api://2ac37601-364a-406f-b7a3-c20443d036c0/access_as_user" ></script>
+     -->
+    <!-- <script type="text/javascript">
+        
+        window.addEventListener('message', async (event) => {
+
+            const { type } = event.data;
+
+            if (type === 'REQUEST_PAGE_PATH') {
+                event.source?.postMessage(
+                    { type: 'PAGE_PATH', path: window.location.pathname },
+                    { targetOrigin: event.origin }
+                );
+                return;
+            }
+
+            if (type === 'REQUEST_DELEGATED_TOKEN') {
+                // SECURITY: Only accept messages from the expected domain
+            
+                if (event.origin !== "https://localhost:32771") return;
+
+                try {
+                    const existingToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhbWFpcy1qd3Qtc2VydmljZSIsImlhdCI6MTc4NDAyOTE3MCwiZXhwIjoxNzg0MTE1NTcwLCJzaXRlX2lkIjoidWJpcSIsImF1ZCI6Imh0dHBzOi8vaG9zdC5kb2NrZXIuaW50ZXJuYWw6NDQzMzIiLCJzdWIiOiI3RGdGK2pka3hCZFl4bEN5dTRST2xRPT0iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZmVsaXBlLmNhc2Fub3ZhQGFtYWlzLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6IkZlbGlwZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3N1cm5hbWUiOiJDYXNhbm92YSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImZlbGlwZS5jYXNhbm92YUBhbWFpcy5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJTdXBlckFkbWluIn0.B1dzTGDFBq62-KBiBBD7CEf-JUutrgX7mRtu8H-LijFH3gC8R3t0e1_o1_LzBb5M5Arw7L6bgQiUd_At-_pWrf49PWNP7D8vudeCbN84ZfsMNqVrNh5thfRoONfL93YkfqNSc-thKPZxQtRy64Rc3RDoA2XdHqnKc0cK4UiYZXL520hj6A-AzKworUWd6rFBtsuwfNiiESOFJz6Xq0353lnRedNT-TDRKcQ6tFRLOPyN4WoWPSqkmFcOuF6He4Y6pj-EbtxxeCNGBWXjl7j7wSDcGIcPBrRyoggn-M7L_tfvXIrIBxid7kdMw5dFbDh-U2DZadqFKPHQ9ExcPwJ1XQ";
+
+                    // Send token back to iframe
+                    event.source?.postMessage(
+                        { type: 'DELEGATED_TOKEN', token: existingToken }, {
+                            targetOrigin: event.origin
+                        }
+                    );
+                } catch (err) {
+                    event.source?.postMessage(
+                        { type: 'DELEGATED_TOKEN_ERROR', error: err.message },
+                        {
+                            targetOrigin: event.origin
+                        }
+                    );
+                }
+            }
+        });
+
+    </script> -->
+    </head>
+<body>
+    <div class="container">
+        <h1>🤖 Wkflo Chat Widget Test 2</h1>
+        <!-- <iframe
+            src="https://localhost:32771/md/chat/f5be3200-0a10-41c1-a696-e9cb2ed1ae95"
+            width="400"
+            height="600"
+            frameborder="0"
+            allow="microphone"
+        ></iframe> -->
+    </div>
+    <div id="wkflo-widget-target" style="width: 400px; height: 600px;"></div>
+</body>
+</html>

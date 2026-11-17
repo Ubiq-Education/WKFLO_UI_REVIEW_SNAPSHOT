@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "./../../shared/styles/chat-components.css";
+@config "../tailwind.config.ts";
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+}

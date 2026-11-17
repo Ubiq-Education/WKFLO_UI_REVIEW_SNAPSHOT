@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wkflo Widget Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .test-section, .test-section-chat {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .test-section h2, .test-section-chat h2 {
+            margin-top: 0;
+        }
+
+        .test-section h3 {
+            margin: 20px 0 10px 0;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+            font-size: 15px;
+            color: #444;
+        }
+
+        .test-section h3:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .test-section button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .test-section button:hover {
+            background: #2563eb;
+        }
+
+        .test-section button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .test-section .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            background: #f0f0f0;
+            font-family: monospace;
+        }
+
+        .widget-container {
+            min-height: 400px;
+            position: relative;
+        }
+
+        .test-section select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .test-section label {
+            display: block;
+            margin: 8px 0 4px 0;
+            font-weight: bold;
+        }
+
+        .test-section input[type="text"],
+        .test-section input[type="number"],
+        .test-section input[type="url"],
+        .test-section textarea {
+            width: 100%;
+            max-width: 420px;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .test-section textarea {
+            resize: vertical;
+            min-height: 50px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 4px 24px;
+        }
+
+        .field {
+            margin-bottom: 6px;
+        }
+
+        .field-hint {
+            font-weight: normal;
+            font-size: 12px;
+            color: #888;
+            margin-left: 6px;
+        }
+
+        .checkbox-field {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .checkbox-field label {
+            display: inline;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .color-field {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 420px;
+        }
+
+        .color-field input[type="color"] {
+            width: 40px;
+            height: 32px;
+            padding: 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .color-field input[type="text"] {
+            flex: 1;
+        }
+
+        #predefinedPromptsList .prompt-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        #predefinedPromptsList input {
+            width: 100% !important;
+            max-width: none !important;
+        }
+
+        .prompt-row button, .add-row-button {
+            background: #6b7280;
+            padding: 6px 12px;
+        }
+
+        .prompt-row button:hover, .add-row-button:hover {
+            background: #4b5563;
+        }
+
+        #securityDetails > div {
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Wkflo Chat Widget Test</h1>
+
+        <div class="test-section">
+            <h2>Widget Status</h2>
+            <div id="status" class="status">Loading widget...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>Session Info</h2>
+            <div id="sessionInfo" class="status">
+                <div><strong>Session ID:</strong> <span id="sessionId">Not initialized</span></div>
+                <div><strong>Storage Key:</strong> <span id="storageKey">Not initialized</span></div>
+                <button onclick="showSessionDetails()" style="margin-top: 10px;">Show Session Details</button>
+                <button onclick="clearAllSessions()" style="margin-top: 10px; background: #dc2626;">Clear All Sessions</button>
+            </div>
+        </div>
+
+        <div class="test-section" id="widgetConfigSection">
+            <h2>Widget Configuration <span class="field-hint">changes apply live</span></h2>
+
+            <h3>Identity &amp; Connection</h3>
+            <div class="form-grid">
+                <div class="field">
+                    <label for="tenantGuid">Tenant GUID</label>
+                    <input type="text" id="tenantGuid" placeholder="tenant guid" />
+                </div>
+                <div class="field">
+                    <label for="apiEndpointInput">API Endpoint</label>
+                    <input type="text" id="apiEndpointInput" value="https://localhost:32771" />
+                </div>
+                <div class="field">
+                    <label for="shareIdInput">Share ID</label>
+                    <input type="text" id="shareIdInput" placeholder="Enter share ID (optional)" />
+                </div>
+                <div class="field">
+                    <label for="agentName">Agent Name</label>
+                    <input type="text" id="agentName" value="Test Support Agent" />
+                </div>
+                <div class="field">
+                    <label for="agentId">Agent ID <span class="field-hint">number, optional</span></label>
+                    <input type="number" id="agentId" placeholder="e.g. 1" />
+                </div>
+                <div class="field">
+                    <label for="headerTitle">Header Title <span class="field-hint">defaults to Agent Name</span></label>
+                    <input type="text" id="headerTitle" placeholder="optional override" />
+                </div>
+            </div>
+            <div class="field">
+                <label for="agentDescription">Agent Description</label>
+                <textarea id="agentDescription">I'm here to help you test the widget!</textarea>
+            </div>
+
+            <h3>Appearance</h3>
+            <div class="form-grid">
+                <div class="field">
+                    <label for="primaryColor">Primary Color</label>
+                    <div class="color-field">
+                        <input type="color" id="primaryColorPicker" value="#3b82f6" />
+                        <input type="text" id="primaryColor" value="#3b82f6" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="foregroundColor">Foreground Color</label>
+                    <div class="color-field">
+                        <input type="color" id="foregroundColorPicker" value="#ffffff" />
+                        <input type="text" id="foregroundColor" value="#ffffff" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="bubbleStyle">Bubble Style</label>
+                    <select id="bubbleStyle">
+                        <option value="rounded" selected>Rounded</option>
+                        <option value="square">Square</option>
+                        <option value="pill">Pill</option>
+                    </select>
+                </div>
+            </div>
+            <div class="checkbox-field">
+                <input type="checkbox" id="showDescription" checked />
+                <label for="showDescription">Show Description</label>
+            </div>
+            <div class="checkbox-field">
+                <input type="checkbox" id="chainOfThought" />
+                <label for="chainOfThought">Chain of Thought</label>
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <label for="bubbleIconPath">Bubble Icon URL</label>
+                    <input type="text" id="bubbleIconPath" placeholder="https://.../launcher-icon.png" />
+                </div>
+                <div class="field">
+                    <label for="chatbotIconPath">Chatbot Icon URL</label>
+                    <input type="text" id="chatbotIconPath" placeholder="https://.../bot-avatar.png" />
+                </div>
+                <div class="field">
+                    <label for="cssUrl">Custom CSS URL</label>
+                    <input type="text" id="cssUrl" placeholder="https://.../custom.css" />
+                </div>
+            </div>
+
+            <h3>Messaging &amp; Quick Replies</h3>
+            <div class="field">
+                <label for="welcomeMessage">Welcome Message <span class="field-hint">blank = default "Hi! I'm {Agent Name}..."</span></label>
+                <textarea id="welcomeMessage" placeholder="Hi! I'm here to help..."></textarea>
+            </div>
+            <div class="field">
+                <label for="footerMessage">Footer Message</label>
+                <input type="text" id="footerMessage" placeholder="e.g. Powered by Wkflo" />
+            </div>
+            <div class="field">
+                <label>Predefined Prompts (Quick Replies)</label>
+                <div id="predefinedPromptsList"></div>
+                <button type="button" class="add-row-button" onclick="addPredefinedPromptRow()">+ Add Prompt</button>
+            </div>
+
+            <h3>Layout &amp; Positioning</h3>
+            <div class="form-grid">
+                <div class="field">
+                    <label for="widthInput">Width <span class="field-hint">CSS value, overrides preset</span></label>
+                    <input type="text" id="widthInput" placeholder="e.g. 400px" />
+                </div>
+                <div class="field">
+                    <label for="heightInput">Height <span class="field-hint">CSS value</span></label>
+                    <input type="text" id="heightInput" placeholder="e.g. 600px" />
+                </div>
+                <div class="field">
+                    <label for="chatWidth">Chat Width Preset</label>
+                    <select id="chatWidth">
+                        <option value="compact">Compact</option>
+                        <option value="standard" selected>Standard</option>
+                        <option value="wide">Wide</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="floatingPosition">Floating Position</label>
+                    <select id="floatingPosition">
+                        <option value="right" selected>Right</option>
+                        <option value="left">Left</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="launcherStyle">Launcher Style</label>
+                    <select id="launcherStyle">
+                        <option value="circle" selected>Circle</option>
+                        <option value="pill">Pill</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="launcherText">Launcher Text <span class="field-hint">pill style only, defaults to Agent Name</span></label>
+                    <input type="text" id="launcherText" placeholder="optional" />
+                </div>
+            </div>
+
+            <h3>Embed &amp; Runtime Behavior</h3>
+            <div class="form-grid">
+                <div class="field">
+                    <label for="containerIdInput">Container ID</label>
+                    <input type="text" id="containerIdInput" value="my-custom-widget-container" />
+                </div>
+                <div class="field">
+                    <label for="targetElementInput">Target Element <span class="field-hint">CSS selector</span></label>
+                    <input type="text" id="targetElementInput" value="#widget-container" />
+                </div>
+                <div class="field">
+                    <label for="isolation">CSS Isolation Strategy</label>
+                    <select id="isolation">
+                        <option value="auto" selected>Auto</option>
+                        <option value="shadow-dom">Shadow DOM</option>
+                        <option value="css-prefix">CSS Prefix</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="errorUrl">Error Report URL</label>
+                    <input type="text" id="errorUrl" placeholder="/CHAT/Widget/error" />
+                </div>
+            </div>
+            <div class="checkbox-field">
+                <input type="checkbox" id="isWidgetToggle" checked />
+                <label for="isWidgetToggle">Render as floating widget <span class="field-hint">unchecked = static inline embed</span></label>
+            </div>
+            <div class="checkbox-field">
+                <input type="checkbox" id="startMinimized" />
+                <label for="startMinimized">Start Minimized</label>
+            </div>
+            <div class="checkbox-field">
+                <input type="checkbox" id="requireRemoteConfig" />
+                <label for="requireRemoteConfig">Require Remote Config <span class="field-hint">fail closed until backend settings load</span></label>
+            </div>
+
+            <h3>Security</h3>
+            <label for="securitySelect">Choose Security Type:</label>
+            <select id="securitySelect" onchange="updateSecurityConfig()">
+                <option value="none">Public (No Authentication)</option>
+                <option value="api-key">API Key Authentication</option>
+                <option value="azure-ad">Azure AD Authentication</option>
+                <option value="jwt-token-callback">JWT Token Callback</option>
+            </select>
+
+            <div id="securityDetails" style="margin-top: 15px;">
+                <div id="publicConfig">
+                    <p><strong>Public Configuration:</strong> No authentication required.</p>
+                </div>
+
+                <div id="apikeyConfig" style="display: none;">
+                    <p><strong>API Key Configuration:</strong></p>
+                    <label>API Key: <input type="text" id="apiKeyValue" placeholder="your-api-key-here" /></label><br>
+                    <label>Tenant Name: <input type="text" id="tenantName" placeholder="your-tenant-name" /></label><br>
+                </div>
+
+                <div id="azureAdConfig" style="display: none;">
+                    <p><strong>Azure AD Configuration:</strong></p>
+                    <label>Client ID: <input type="text" id="azureClientId" placeholder="your-azure-client-id" /></label><br>
+                    <label>Tenant ID: <input type="text" id="azureTenantId" placeholder="your-azure-tenant-id" /></label><br>
+                    <label>Scopes: <input type="text" id="azureScopes" placeholder="openid,profile,api://your-api/access" /></label>
+                </div>
+
+                <div id="jwtConfig" style="display: none;">
+                    <p><strong>JWT Token Callback Configuration:</strong></p>
+                    <label>Allowed Domains: <input type="text" id="jwtDomains" placeholder="example.com,app.example.com" /></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Quick Security Tests</h2>
+            <button onclick="testPublicSecurity()" style="background: #059669;">Test Public</button>
+            <button onclick="testApiKeySecurity()" style="background: #dc2626;">Test API Key</button>
+            <button onclick="testAzureAdSecurity()" style="background: #7c3aed;">Test Azure AD</button>
+            <button onclick="testJwtSecurity()" style="background: #0891b2;">Test JWT Callback</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Controls</h2>
+            <button onclick="createWidget()">Create / Recreate Widget</button>
+            <button onclick="showWidget()">Show Widget</button>
+            <button onclick="hideWidget()">Hide Widget</button>
+            <button onclick="minimizeWidget()">Minimize Widget</button>
+            <button onclick="maximizeWidget()">Maximize Widget</button>
+            <button onclick="destroyWidget()">Destroy Widget</button>
+            <button onclick="testDifferentColors()">Test Different Colors</button>
+            <button onclick="testReadMessages()" style="background: #f59e0b;">Test Read Messages</button>
+            <button onclick="copyConfigJson()" style="background: #6b7280;">Copy Config as JSON</button>
+        </div>
+
+        <div class="test-section-chat">
+            <h2>Widget Demo Area</h2>
+            <div class="widget-container" id="widget-container">
+                <p>The widget will appear here when created.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load JS
+        var script = document.createElement('script');
+        script.src = '/dist-widget/wkflo-widget.umd.cjs';
+        document.head.appendChild(script);
+    </script>
+    <script>
+        let widget = null;
+        let predefinedPromptRowId = 0;
+        const statusEl = document.getElementById('status');
+
+        function updateStatus(message) {
+            statusEl.textContent = new Date().toLocaleTimeString() + ': ' + message;
+            console.log('Widget Test:', message);
+        }
+
+        // Debounced auto-apply: any change inside the config panel recreates the
+        // widget without needing a manual "Create / Recreate Widget" click.
+        // 'input' (typing, dragging a color picker) is debounced so the widget
+        // isn't torn down on every keystroke; 'change'/'click' (selects, checkboxes,
+        // color commit, add/remove prompt buttons) apply instantly since those are
+        // discrete, low-frequency events.
+        let recreateTimer = null;
+        function scheduleRecreate(delay) {
+            if (recreateTimer) clearTimeout(recreateTimer);
+            recreateTimer = setTimeout(() => {
+                recreateTimer = null;
+                createWidget();
+            }, delay);
+        }
+
+        function wireLiveUpdates() {
+            const configSection = document.getElementById('widgetConfigSection');
+            configSection.addEventListener('input', () => scheduleRecreate(400));
+            configSection.addEventListener('change', () => scheduleRecreate(0));
+            configSection.addEventListener('click', (event) => {
+                if (event.target.tagName === 'BUTTON') scheduleRecreate(0);
+            });
+        }
+
+        // Keep the color text input and color picker in sync with each other.
+        function linkColorField(pickerId, textId) {
+            const picker = document.getElementById(pickerId);
+            const text = document.getElementById(textId);
+            picker.addEventListener('input', () => { text.value = picker.value; });
+            text.addEventListener('input', () => {
+                if (/^#[0-9a-fA-F]{6}$/.test(text.value)) {
+                    picker.value = text.value;
+                }
+            });
+        }
+
+        function addPredefinedPromptRow(title, prompt) {
+            const rowId = 'promptRow' + (predefinedPromptRowId++);
+            const list = document.getElementById('predefinedPromptsList');
+            const row = document.createElement('div');
+            row.className = 'prompt-row';
+            row.id = rowId;
+            row.innerHTML =
+                '<input type="text" class="prompt-title" placeholder="Title (e.g. Hours)" />' +
+                '<input type="text" class="prompt-text" placeholder="Prompt (e.g. What are your hours?)" />' +
+                '<button type="button" onclick="document.getElementById(\'' + rowId + '\').remove()">Remove</button>';
+            list.appendChild(row);
+            if (title !== undefined) row.querySelector('.prompt-title').value = title;
+            if (prompt !== undefined) row.querySelector('.prompt-text').value = prompt;
+        }
+
+        function getPredefinedPrompts() {
+            const rows = document.querySelectorAll('#predefinedPromptsList .prompt-row');
+            const prompts = [];
+            rows.forEach(row => {
+                const title = row.querySelector('.prompt-title').value.trim();
+                const prompt = row.querySelector('.prompt-text').value.trim();
+                if (title || prompt) {
+                    prompts.push({ title, prompt });
+                }
+            });
+            return prompts;
+        }
+
+        function getSecurityConfig() {
+            const securityType = document.getElementById('securitySelect').value;
+
+            switch(securityType) {
+                case 'none':
+                    return { type: 'none' };
+
+                case 'api-key':
+                    return {
+                        type: 'api-key',
+                        apiKey: {
+                            value: document.getElementById('apiKeyValue').value || 'demo-api-key-123',
+                            tenantName: document.getElementById('tenantName').value || 'demo-tenant'
+                        }
+                    };
+
+                case 'azure-ad':
+                    return {
+                        type: 'azure-ad',
+                        azureAd: {
+                            clientId: document.getElementById('azureClientId').value || '2ac37601-364a-406f-b7a3-c20443d036c0',
+                            tenantId: document.getElementById('azureTenantId').value || 'bf3e1181-ffe9-40f7-aee4-11dc5fd642c6',
+                            scopes: (document.getElementById('azureScopes').value || 'openid,profile,api://2ac37601-364a-406f-b7a3-c20443d036c0/access_as_user').split(',').map(s => s.trim()).filter(Boolean)
+                        }
+                    };
+
+                case 'jwt-token-callback':
+                    return {
+                        type: 'jwt-token-callback',
+                        jwt: {
+                            domains: (document.getElementById('jwtDomains').value || window.location.hostname).split(',').map(s => s.trim()).filter(Boolean)
+                        }
+                    };
+
+                default:
+                    return { type: 'none' };
+            }
+        }
+
+        // Builds the full AgentConfig object from every field in the form.
+        // Mirrors shared/components/agent-chat-interface.tsx AgentConfig + the
+        // widget-constructor-only options in chat-widget/src/widget.tsx.
+        function buildConfig() {
+            const agentIdRaw = document.getElementById('agentId').value;
+
+            return {
+                tenantGuid: document.getElementById('tenantGuid').value || undefined,
+                agentName: document.getElementById('agentName').value || 'Test Support Agent',
+                agentId: agentIdRaw ? Number(agentIdRaw) : undefined,
+                agentDescription: document.getElementById('agentDescription').value || undefined,
+                headerTitle: document.getElementById('headerTitle').value || undefined,
+                primaryColor: document.getElementById('primaryColor').value || '#3b82f6',
+                foregroundColor: document.getElementById('foregroundColor').value || '#ffffff',
+                bubbleStyle: document.getElementById('bubbleStyle').value,
+                showDescription: document.getElementById('showDescription').checked,
+                chainOfThought: document.getElementById('chainOfThought').checked,
+                apiEndpoint: document.getElementById('apiEndpointInput').value || 'https://localhost:32771',
+                bubbleIconPath: document.getElementById('bubbleIconPath').value || undefined,
+                chatbotIconPath: document.getElementById('chatbotIconPath').value || undefined,
+                cssUrl: document.getElementById('cssUrl').value || undefined,
+                welcomeMessage: document.getElementById('welcomeMessage').value || undefined,
+                footerMessage: document.getElementById('footerMessage').value || undefined,
+                predefinedPrompts: getPredefinedPrompts(),
+                shareId: document.getElementById('shareIdInput').value || undefined,
+                containerId: document.getElementById('containerIdInput').value || undefined,
+                targetElement: document.getElementById('targetElementInput').value || undefined,
+                securityConfiguration: getSecurityConfig(),
+                width: document.getElementById('widthInput').value || undefined,
+                height: document.getElementById('heightInput').value || undefined,
+                chatWidth: document.getElementById('chatWidth').value,
+                floatingPosition: document.getElementById('floatingPosition').value,
+                launcherStyle: document.getElementById('launcherStyle').value,
+                launcherText: document.getElementById('launcherText').value || undefined,
+                isolation: document.getElementById('isolation').value,
+                startMinimized: document.getElementById('startMinimized').checked,
+                requireRemoteConfig: document.getElementById('requireRemoteConfig').checked,
+                errorUrl: document.getElementById('errorUrl').value || undefined
+            };
+        }
+
+        function createWidget() {
+            try {
+                if (widget) {
+                    updateStatus('Widget already exists. Destroying first...');
+                    widget.destroy();
+                }
+
+                const config = buildConfig();
+                const isWidget = document.getElementById('isWidgetToggle').checked;
+
+                updateStatus('Creating widget with security: ' + config.securityConfiguration.type);
+                console.log('Full config:', config);
+
+                if (typeof WkfloWidget !== 'undefined') {
+                    widget = new WkfloWidget(config, isWidget);
+                    widget.show();
+                    updateStatus('Widget created and shown with ' + config.securityConfiguration.type + ' security!');
+                    updateSessionInfo(); // Update session display
+                } else {
+                    updateStatus('ERROR: WkfloWidget class not found. Check if the script loaded correctly.');
+                }
+
+            } catch (error) {
+                updateStatus('ERROR creating widget: ' + error.message);
+                console.error('Widget creation error:', error);
+            }
+        }
+
+        function showWidget() {
+            if (widget) {
+                widget.show();
+                updateStatus('Widget shown');
+            } else {
+                updateStatus('No widget to show. Create one first.');
+            }
+        }
+
+        function hideWidget() {
+            if (widget) {
+                widget.hide();
+                updateStatus('Widget hidden');
+            } else {
+                updateStatus('No widget to hide.');
+            }
+        }
+
+        function minimizeWidget() {
+            if (widget) {
+                widget.minimizeWidget();
+                updateStatus('Widget minimized to bubble');
+            } else {
+                updateStatus('No widget to minimize.');
+            }
+        }
+
+        function maximizeWidget() {
+            if (widget) {
+                widget.maximizeWidget();
+                updateStatus('Widget maximized from bubble');
+            } else {
+                updateStatus('No widget to maximize.');
+            }
+        }
+
+        function destroyWidget() {
+            if (widget) {
+                widget.destroy();
+                widget = null;
+                updateStatus('Widget destroyed');
+            } else {
+                updateStatus('No widget to destroy.');
+            }
+        }
+
+        function testPublicSecurity() {
+            document.getElementById('securitySelect').value = 'none';
+            updateSecurityConfig();
+            createWidget();
+        }
+
+        function testApiKeySecurity() {
+            document.getElementById('securitySelect').value = 'api-key';
+            updateSecurityConfig();
+            createWidget();
+        }
+
+        function testAzureAdSecurity() {
+            document.getElementById('securitySelect').value = 'azure-ad';
+            updateSecurityConfig();
+            createWidget();
+        }
+
+        function testJwtSecurity() {
+            document.getElementById('securitySelect').value = 'jwt-token-callback';
+            updateSecurityConfig();
+            createWidget();
+        }
+
+        function testDifferentColors() {
+            const colors = ['#3b82f6', '#059669', '#dc2626', '#7c3aed', '#ea580c'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+            document.getElementById('primaryColor').value = randomColor;
+            document.getElementById('primaryColorPicker').value = randomColor;
+
+            createWidget();
+            updateStatus('Created widget with color: ' + randomColor);
+        }
+
+        async function copyConfigJson() {
+            const config = buildConfig();
+            const json = JSON.stringify(config, null, 2);
+            try {
+                await navigator.clipboard.writeText(json);
+                updateStatus('Config JSON copied to clipboard');
+            } catch (error) {
+                // Clipboard API can be blocked (e.g. insecure context); fall back to a prompt
+                // the user can copy from manually.
+                window.prompt('Copy the config JSON below:', json);
+            }
+        }
+
+        async function testReadMessages() {
+            if (!widget) {
+                updateStatus('No widget created. Create a widget first.');
+                return;
+            }
+
+            try {
+                updateStatus('Testing readMessages API call...');
+
+                // Get current session ID
+                const agentId = 'test-agent-123';
+                const sessionId = getOrCreateSessionId(agentId, 'demo-site');
+
+                // Simulate making the API call (this is just for demonstration)
+                // In reality, the widget handles this internally
+                const apiEndpoint = widget.config?.apiEndpoint;
+                if (apiEndpoint) {
+                    updateStatus(`Making readMessages call for session: ${sessionId}`);
+                    console.log('ReadMessages API call details:', {
+                        endpoint: `${apiEndpoint}/md/api/v1/tenant/agent/${agentId}/chat/${sessionId}/messages`,
+                        method: 'GET',
+                        sessionId: sessionId
+                    });
+
+                    console.log('Expected API Response Format:', {
+                        "resultType": 0,
+                        "data": [
+                            {
+                                "id": "user-91852a42-5151-4479-a847-a5b28320b4f2",
+                                "type": "user",
+                                "content": "Hi test",
+                                "timestamp": "2025-11-03T17:11:16.5478028+00:00",
+                                "contentItems": [
+                                    {
+                                        "name": "Text Content",
+                                        "description": "Hi test",
+                                        "status": "success",
+                                        "statusCode": "200"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "assistant-aa4c1bff-abb5-4527-ba19-13d956e41320",
+                                "type": "assistant",
+                                "content": "Response content here...",
+                                "timestamp": "2025-11-03T17:11:21.481578+00:00",
+                                "contentItems": [
+                                    {
+                                        "name": "Text Content",
+                                        "description": "Response description...",
+                                        "status": "success",
+                                        "statusCode": "200"
+                                    }
+                                ]
+                            }
+                        ]
+                    });
+
+                    updateStatus('ReadMessages test completed - check console for API details and expected format');
+                } else {
+                    updateStatus('No API endpoint configured for readMessages test');
+                }
+            } catch (error) {
+                updateStatus('ReadMessages test failed: ' + error.message);
+                console.error('ReadMessages test error:', error);
+            }
+        }
+
+        function updateSecurityConfig() {
+            const securityType = document.getElementById('securitySelect').value;
+
+            // Hide all config sections
+            document.getElementById('publicConfig').style.display = 'none';
+            document.getElementById('apikeyConfig').style.display = 'none';
+            document.getElementById('azureAdConfig').style.display = 'none';
+            document.getElementById('jwtConfig').style.display = 'none';
+
+            // Show the selected config section
+            const sectionId = securityType === 'api-key' ? 'apikeyConfig'
+                : securityType === 'azure-ad' ? 'azureAdConfig'
+                : securityType === 'jwt-token-callback' ? 'jwtConfig'
+                : 'publicConfig';
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        function initializeForm() {
+            // Set default values for demonstration
+            document.getElementById('apiKeyValue').value = 'demo-api-key-123';
+            document.getElementById('tenantName').value = 'demo-tenant';
+
+            document.getElementById('azureClientId').value = '2ac37601-364a-406f-b7a3-c20443d036c0';
+            document.getElementById('azureTenantId').value = 'bf3e1181-ffe9-40f7-aee4-11dc5fd642c6';
+            document.getElementById('azureScopes').value = 'openid,profile,api://2ac37601-364a-406f-b7a3-c20443d036c0/access_as_user';
+
+            document.getElementById('jwtDomains').value = window.location.hostname;
+
+            linkColorField('primaryColorPicker', 'primaryColor');
+            linkColorField('foregroundColorPicker', 'foregroundColor');
+
+            addPredefinedPromptRow('Hours', 'What are your hours?');
+            addPredefinedPromptRow('Pricing', 'How much does this cost?');
+
+            // Initialize the security config display
+            updateSecurityConfig();
+
+            // Update session info display
+            updateSessionInfo();
+
+            // Any edit inside the config panel now recreates the widget automatically.
+            wireLiveUpdates();
+        }
+
+        // Session management functions
+        function generateGuid() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function getOrCreateSessionId(agentId) {
+            const sessionKey = `wkflo-chat-session-${agentId}`;
+            let sessionId = localStorage.getItem(sessionKey);
+
+            if (!sessionId || !isValidGuid(sessionId)) {
+                sessionId = generateGuid();
+                localStorage.setItem(sessionKey, sessionId);
+            }
+
+            return sessionId;
+        }
+
+        function isValidGuid(guid) {
+            const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+            return guidRegex.test(guid);
+        }
+
+        function updateSessionInfo() {
+            const agentId = '1';
+            const sessionId = getOrCreateSessionId(agentId, 'demo-site');
+            const storageKey = `wkflo-chat-session-${agentId}`;
+
+            document.getElementById('sessionId').textContent = sessionId;
+            document.getElementById('storageKey').textContent = storageKey;
+        }
+
+        function showSessionDetails() {
+            const sessions = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('wkflo-chat-session-')) {
+                    const agentId = key.replace('wkflo-chat-session-', '');
+                    const sessionId = localStorage.getItem(key);
+                    sessions.push({ agentId, sessionId, key });
+                }
+            }
+
+            if (sessions.length === 0) {
+                alert('No sessions found in localStorage');
+            } else {
+                const details = sessions.map(s =>
+                    `Agent: ${s.agentId}\nSession: ${s.sessionId}\nKey: ${s.key}`
+                ).join('\n\n');
+                alert('Session Details:\n\n' + details);
+            }
+        }
+
+        function clearAllSessions() {
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('wkflo-chat-session-')) {
+                    keysToRemove.push(key);
+                }
+            }
+
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            updateSessionInfo();
+            updateStatus('All chat sessions cleared from localStorage');
+        }
+
+        // Initialize form when page loads
+        window.addEventListener('load', function() {
+            initializeForm();
+
+            if (typeof WkfloWidget !== 'undefined') {
+                updateStatus('Widget script loaded successfully! Ready to test.');
+            } else {
+                updateStatus('ERROR: Widget script not loaded. Check console for errors.');
+            }
+        });
+
+        // Auto-create widget on page load for quick testing
+        setTimeout(() => {
+            if (typeof WkfloWidget !== 'undefined') {
+                createWidget();
+            }
+        }, 1000);
+
+    </script>
+</body>
+</html>

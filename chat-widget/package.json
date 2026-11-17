@@ -1,0 +1,43 @@
+{
+  "name": "wkflo-agent-chat",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3001 --mode development",
+    "build": "vite build",
+    "preview": "vite preview --port 3001",
+    "widget-build-dev": "vite build --mode development --config vite.widget.config.ts",
+    "widget-build": "vite build --config vite.widget.config.ts"
+  },
+  "dependencies": {
+    "@azure/msal-browser": "^4.13.1",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@tanstack/react-query": "^5.17.0",
+    "dompurify": "^3.4.17",
+    "lucide-react": "^0.294.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^6.1.0",
+    "turndown": "^7.2.4",
+    "turndown-plugin-gfm": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@types/turndown": "^5.0.6",
+    "@vitejs/plugin-react": "^6.0.3",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.25",
+    "tailwindcss": "^4.3.1",
+    "tsx": "^4.22.4",
+    "typescript": "^5.2.2",
+    "vite": "^8.1.3"
+  },
+  "overrides": {
+    "esbuild": ">=0.28.1",
+    "nanoid": "3.3.18",
+    "source-map-js": "1.2.2"
+  }
+}

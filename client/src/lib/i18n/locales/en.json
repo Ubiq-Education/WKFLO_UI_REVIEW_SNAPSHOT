@@ -1,0 +1,13 @@
+{
+  "errorCodes": {
+    "WKFLO0001": "An unexpected error occurred. Please try again later.",
+    "WKFLOMD0305": "No published version found for this tenant agent. Please publish the agent first before sharing.",
+    "WKFLOMD0306": "The published agent is outdated. Please republish the agent before sharing.",
+    "WKFLOMD0404": "No published version found for this tenant tool. Please publish the tool first before sharing.",
+    "WKFLOMD0405": "The published tool is outdated. Please republish the tool before sharing.",
+    "WKFLOMD1601": "You don't have permission to do this. Please contact Support.",
+    "WKFLOMD1602": "You can't remove your own super power user access.",
+    "WKFLOMD1603": "At least one super power user must remain. Please contact Support.",
+    "WKFLOMD1604": "That workspace could not be found. Please contact Support."
+  }
+}

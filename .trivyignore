@@ -1,0 +1,2 @@
+# Ignore missing Dockerfile HEALTHCHECK instruction
+DS-0026
